@@ -90,3 +90,33 @@ Intensity IntensityImageStudent::getPixel(int i) const {
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: see setPixel(int i, RGB pixel)
 }
+
+void IntensityImageStudent::convertFromRGB(const RGBImage &other, bool efficient){
+    delete[] pixelmap;
+    IntensityImage::set(other.getWidth(), other.getHeight());
+    pixelmap = new Intensity[this->getHeight()*this->getWidth()];
+    if (efficient){
+        //code for efficient
+        efficientRGBConversion(other);
+    }
+    else {
+        //code for accurate
+        accurateRGBConversion(other);
+    }
+}
+
+void IntensityImageStudent::accurateRGBConversion(const RGBImage &other){
+    RGB temp_rgb;
+    for (int i = 0; i < this->getHeight()*this->getWidth(); i++){
+        temp_rgb = other.getPixel(i);
+        pixelmap[i] = static_cast<unsigned char>(sqrt(0.299 * temp_rgb.r * temp_rgb.r + 0.587 * temp_rgb.g * temp_rgb.g + 0.114 * temp_rgb.b * temp_rgb.b));
+    }
+}
+
+void IntensityImageStudent::efficientRGBConversion(const RGBImage &other){
+    RGB temp_rgb;
+    for (int i = 0; i < this->getHeight()*this->getWidth(); i++){
+        temp_rgb = other.getPixel(i);
+        pixelmap[i] = (temp_rgb.r + temp_rgb.r + temp_rgb.g + temp_rgb.g + temp_rgb.g + temp_rgb.b) / 6;
+    }
+}

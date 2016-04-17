@@ -6,6 +6,9 @@
 
 #pragma once
 #include "IntensityImage.h"
+#include "RGBImageStudent.h"
+#include <math.h>
+
 class IntensityImageStudent : public IntensityImage {
 public:
 	IntensityImageStudent();
@@ -22,6 +25,11 @@ public:
 	Intensity getPixel(int x, int y) const;
 	Intensity getPixel(int i) const;
 
+   void convertFromRGB(const RGBImage &other, bool efficient = false);
+
 private:
     Intensity * pixelmap;
+
+    void accurateRGBConversion(const RGBImage &other);
+    void efficientRGBConversion(const RGBImage &other);
 };
