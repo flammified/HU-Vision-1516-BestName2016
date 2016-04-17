@@ -45,7 +45,7 @@ void IntensityImageStudent::set(const IntensityImageStudent &other) {
 
 void IntensityImageStudent::setPixel(int x, int y, Intensity pixel) {
 	if (!(x < this->getWidth() && y < this->getHeight())) return;
-	pixelmap[x*this->getWidth() + y] = pixel;
+	pixelmap[y*this->getWidth() + x] = pixel;
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: no comment needed :)
 }
@@ -79,7 +79,7 @@ void IntensityImageStudent::setPixel(int i, Intensity pixel) {
 
 Intensity IntensityImageStudent::getPixel(int x, int y) const {
 	if (!(x < this->getWidth() && y < this->getHeight())) return Intensity();
-	return pixelmap[x*this->getWidth() + y];
+	return pixelmap[y*this->getWidth() + x];
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: no comment needed :)
 }
