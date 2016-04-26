@@ -91,6 +91,7 @@ Intensity IntensityImageStudent::getPixel(int i) const {
 	//TODO: see setPixel(int i, RGB pixel)
 }
 
+/*
 void IntensityImageStudent::convertFromRGB(const RGBImage &other, bool efficient){
     delete[] pixelmap;
     IntensityImage::set(other.getWidth(), other.getHeight());
@@ -120,3 +121,4 @@ void IntensityImageStudent::efficientRGBConversion(const RGBImage &other){
         pixelmap[i] = (temp_rgb.r + temp_rgb.r + temp_rgb.g + temp_rgb.g + temp_rgb.g + temp_rgb.b) / 6;
     }
 }
+*/

@@ -36,12 +36,12 @@ int main(int argc, char * argv[]) {
 
 	ImageIO::saveRGBImage(*input, ImageIO::getDebugFileName("debug.png"));
 
-   IntensityImageStudent test{};
-   test.convertFromRGB(*input); //accurate
-   ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_accurate.png"));
-   test.convertFromRGB(*input, true); //efficient
-   ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_efficient.png"));
-
+   StudentPreProcessing processing{};
+   IntensityImage * test = processing.stepToIntensityImage(*input);
+   //test.convertFromRGB(*input); //accurate
+   ImageIO::saveIntensityImage(*test, ImageIO::getDebugFileName("grayscale_test.png"));
+   //test.convertFromRGB(*input, true); //efficient
+   delete test;
 	DLLExecution * executor = new DLLExecution(input);
 
 

@@ -25,11 +25,11 @@ public:
 	Intensity getPixel(int x, int y) const;
 	Intensity getPixel(int i) const;
 
-   void convertFromRGB(const RGBImage &other, bool efficient = false);
+   //void convertFromRGB(const RGBImage &other, bool efficient = false);
 
 private:
     Intensity * pixelmap;
 
-    void accurateRGBConversion(const RGBImage &other);
-    void efficientRGBConversion(const RGBImage &other);
+    //void accurateRGBConversion(const RGBImage &other);
+    //void efficientRGBConversion(const RGBImage &other);
 };
