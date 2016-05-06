@@ -78,6 +78,7 @@ void IntensityImageStudent::setPixel(int i, Intensity pixel) {
 }
 
 Intensity IntensityImageStudent::getPixel(int x, int y) const {
+	if (x < 0 || y < 0) return Intensity();
 	if (!(x < this->getWidth() && y < this->getHeight())) return Intensity();
 	return pixelmap[y*this->getWidth() + x];
 	//int throwError = 0, e = 1 / throwError;
