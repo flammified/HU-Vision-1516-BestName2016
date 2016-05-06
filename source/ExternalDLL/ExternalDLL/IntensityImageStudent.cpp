@@ -2,8 +2,6 @@
 
 IntensityImageStudent::IntensityImageStudent() : IntensityImage(){
 	pixelmap = new Intensity[0];
-	//int throwError = 0, e = 1 / throwError; //Throws error without the need to include a header
-	//TODO: Nothing
 }
 
 IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other) : IntensityImage{other.getWidth(), other.getHeight()} {
@@ -15,23 +13,16 @@ IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other)
 
 IntensityImageStudent::IntensityImageStudent(const int width, const int height) : IntensityImage(width, height) {
 	pixelmap = new Intensity[width * height];
-	//int throwError = 0, e = 1 / throwError;
-	//TODO: Initialize pixel storage
 }
 
 IntensityImageStudent::~IntensityImageStudent() {
     delete[] pixelmap;
-	//int throwError = 0, e = 1 / throwError;
-	//TODO: delete allocated objects
 }
 
 void IntensityImageStudent::set(const int width, const int height) {
     delete[] pixelmap;
     IntensityImage::set(width, height);
     pixelmap = new Intensity[width * height];
-
-	//int throwError = 0, e = 1 / throwError;
-	//TODO: resize or create a new pixel storage (Don't forget to delete the old storage)
 }
 
 void IntensityImageStudent::set(const IntensityImageStudent &other) {
@@ -40,57 +31,30 @@ void IntensityImageStudent::set(const IntensityImageStudent &other) {
 	for (int i = 0; i < this->getHeight()*this->getWidth(); i++){
 		pixelmap[i] = other.getPixel(i);
 	}
-	//int throwError = 0, e = 1 / throwError;
-	//TODO: resize or create a new pixel storage and copy the object (Don't forget to delete the old storage)
 }
 
 void IntensityImageStudent::setPixel(int x, int y, Intensity pixel) {
-	if (!(x < this->getWidth() && y < this->getHeight())) return;
-	pixelmap[y*this->getWidth() + x] = pixel;
-	//int throwError = 0, e = 1 / throwError;
-	//TODO: no comment needed :)
+    if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight()) return; //should throw error
+	 pixelmap[y*this->getWidth() + x] = pixel;
 }
 
 void IntensityImageStudent::setPixel(int i, Intensity pixel) {
-	if (!(i < this->getWidth() * this->getHeight())) return;
+	if (i < 0 || i >= getHeight() * getWidth()) return;
 	pixelmap[i] = pixel;
-	//int throwError = 0, e = 1 / throwError;
-	/*
-	* TODO: set pixel i in "Row-Major Order"
-	*
-	*
-	* Original 2d image (values):
-	* 9 1 2
-	* 4 3 5
-	* 8 7 8
-	*
-	* 1d representation (i, value):
-	* i		value
-	* 0		9
-	* 1		1
-	* 2		2
-	* 3		4
-	* 4		3
-	* 5		5
-	* 6		8
-	* 7		7
-	* 8		8
-	*/
 }
 
 Intensity IntensityImageStudent::getPixel(int x, int y) const {
-	if (x < 0 || y < 0) return 255;
-	if (!(x < this->getWidth() && y < this->getHeight())) return 255;
+    x = x < 0 ? 0 : x;
+    y = y < 0 ? 0 : y;
+    x = x >= getWidth() ? getWidth() - 1 : x;
+    y = y >= getHeight() ? getHeight() - 1 : y;
 	return pixelmap[y*this->getWidth() + x];
-	//int throwError = 0, e = 1 / throwError;
-	//TODO: no comment needed :)
 }
 
 Intensity IntensityImageStudent::getPixel(int i) const {
-	if (!(i < this->getWidth() * this->getHeight())) return Intensity();
+    i = i < 0 ? 0 : i;
+    i = i >= getHeight()*getWidth() ? getHeight() * getWidth() - 1 : i;
 	return pixelmap[i];
-	//int throwError = 0, e = 1 / throwError;
-	//TODO: see setPixel(int i, RGB pixel)
 }
 
 void IntensityImageStudent::convertFromRGB(const RGBImage &other, bool efficient){
