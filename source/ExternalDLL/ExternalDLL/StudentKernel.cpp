@@ -13,9 +13,9 @@ IntensityImageStudent StudentKernel::apply_on_image(IntensityImageStudent img) {
 					int dx = x_k - 1;
 					int dy = y_k - 1;
 
-					Intensity pix_val = img.getPixel(x_k + dx, y_k + dy);
+					Intensity pix_val = img.getPixel(x + x_k + dx, y + y_k + dy);
 					
-					temp += (pix_val * values[dy][dx]);
+					temp += (pix_val * values[y_k][x_k]);
 				}
 			}
 

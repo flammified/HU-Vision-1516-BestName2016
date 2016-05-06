@@ -10,6 +10,7 @@
 #include "ImageFactory.h"
 #include "DLLExecution.h"
 #include "IntensityImageStudent.h"
+#include "StudentKernel.h"
 
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features);
 bool executeSteps(DLLExecution * executor);
@@ -20,14 +21,14 @@ int main(int argc, char * argv[]) {
 	//ImageFactory::setImplementation(ImageFactory::STUDENT);
 
 
-	ImageIO::debugFolder = "D:\\School\\Jaar 2\\Blok D\\Vision\\HU-Vision-1516-BestName2016\\source\\debug";
+	ImageIO::debugFolder = "C:\\Users\\A\\Pictures";
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
 
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("D:\\test.jpg", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\test.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -36,11 +37,30 @@ int main(int argc, char * argv[]) {
 
 	ImageIO::saveRGBImage(*input, ImageIO::getDebugFileName("debug.png"));
 
-   IntensityImageStudent test{};
-   test.convertFromRGB(*input); //accurate
-   ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_accurate.png"));
-   test.convertFromRGB(*input, true); //efficient
-   ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_efficient.png"));
+	IntensityImageStudent test{};
+	test.convertFromRGB(*input); //accurate
+	ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_accurate.png"));
+	test.convertFromRGB(*input, true); //efficient
+	ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_efficient.png"));
+
+	double** kernel = new double*[3];
+	for (int y = 0; y < 3; y++) {
+		kernel[y] = new double[3];
+	}
+	kernel[0][0] = -1;
+	kernel[0][1] = -1;
+	kernel[0][2] = -1;
+	kernel[1][0] = -1;
+	kernel[1][1] =  8;
+	kernel[1][2] = -1;
+	kernel[2][0] = -1;
+	kernel[2][1] = -1;
+	kernel[2][2] = -1;
+
+	
+	StudentKernel k = StudentKernel(kernel, 3, 3);
+	test = k.apply_on_image(test);
+	ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("test_kernel.png"));
 
 	DLLExecution * executor = new DLLExecution(input);
 
