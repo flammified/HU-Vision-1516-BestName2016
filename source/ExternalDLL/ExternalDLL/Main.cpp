@@ -28,7 +28,7 @@ int main(int argc, char * argv[]) {
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\test.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\lena.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -43,24 +43,50 @@ int main(int argc, char * argv[]) {
 	test.convertFromRGB(*input, true); //efficient
 	ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_efficient.png"));
 
-	double** kernel = new double*[3];
+	double** blur = new double*[3];
 	for (int y = 0; y < 3; y++) {
-		kernel[y] = new double[3];
+		blur[y] = new double[3];
 	}
-	kernel[0][0] = -1;
-	kernel[0][1] = -1;
-	kernel[0][2] = -1;
-	kernel[1][0] = -1;
-	kernel[1][1] =  8;
-	kernel[1][2] = -1;
-	kernel[2][0] = -1;
-	kernel[2][1] = -1;
-	kernel[2][2] = -1;
+	blur[0][0] = 1;
+	blur[0][1] = 1;
+	blur[0][2] = 1;
+	blur[1][0] = 1;
+	blur[1][1] = 1;
+	blur[1][2] = 1;
+	blur[2][0] = 1;
+	blur[2][1] = 1;
+	blur[2][2] = 1;
+
+	StudentKernel blur_k = StudentKernel(blur, 3, 3, 0.11111111111111);
+
+	double** hp = new double*[3];
+	for (int y = 0; y < 3; y++) {
+		hp[y] = new double[3];
+	}
+	hp[0][0] = -1;
+	hp[0][1] = -1;
+	hp[0][2] = -1;
+	hp[1][0] = -1;
+	hp[1][1] = 8;
+	hp[1][2] = -1;
+	hp[2][0] = -1;
+	hp[2][1] = -1;
+	hp[2][2] = -1;
+
+	//kernel[0][0] = 0.5;
+	//kernel[0][1] = 1;
+	//kernel[0][2] = 0.5;
+	//kernel[1][0] = 1;
+	//kernel[1][1] = -6;
+	//kernel[1][2] = 1;
+	//kernel[2][0] = 0.5;
+	//kernel[2][1] = -1;
+	//kernel[2][2] = 0.5;
 
 	
-	StudentKernel k = StudentKernel(kernel, 3, 3);
-	test = k.apply_on_image(test);
-	ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("test_kernel.png"));
+	StudentKernel k = StudentKernel(hp, 3, 3);
+	IntensityImageStudent test2 = k.apply_on_image(blur_k.apply_on_image(test));
+	ImageIO::saveIntensityImage(test2, ImageIO::getDebugFileName("test_kernel.png"));
 
 	DLLExecution * executor = new DLLExecution(input);
 

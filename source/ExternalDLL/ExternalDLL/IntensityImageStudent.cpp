@@ -7,9 +7,10 @@ IntensityImageStudent::IntensityImageStudent() : IntensityImage(){
 }
 
 IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other) : IntensityImage{other.getWidth(), other.getHeight()} {
-	pixelmap = new Intensity[this->getWidth() * this->getHeight()];
-	//int throwError = 0, e = 1 / throwError;
-	//TODO: Create a copy from the other object
+	pixelmap = new Intensity[other.getWidth() * other.getHeight()];
+	for (int i = 0; i < this->getWidth() * this->getHeight(); i++) {
+		pixelmap[i] = other.getPixel(i);
+	}
 }
 
 IntensityImageStudent::IntensityImageStudent(const int width, const int height) : IntensityImage(width, height) {
@@ -78,8 +79,8 @@ void IntensityImageStudent::setPixel(int i, Intensity pixel) {
 }
 
 Intensity IntensityImageStudent::getPixel(int x, int y) const {
-	if (x < 0 || y < 0) return Intensity();
-	if (!(x < this->getWidth() && y < this->getHeight())) return Intensity();
+	if (x < 0 || y < 0) return 255;
+	if (!(x < this->getWidth() && y < this->getHeight())) return 255;
 	return pixelmap[y*this->getWidth() + x];
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: no comment needed :)
