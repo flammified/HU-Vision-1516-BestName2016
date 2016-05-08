@@ -13,6 +13,13 @@ IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other)
 	}
 }
 
+IntensityImageStudent::IntensityImageStudent(const IntensityImage &other) : IntensityImage{ other.getWidth(), other.getHeight() } {
+	pixelmap = new Intensity[other.getWidth() * other.getHeight()];
+	for (int i = 0; i < this->getWidth() * this->getHeight(); i++) {
+		pixelmap[i] = other.getPixel(i);
+	}
+}
+
 IntensityImageStudent::IntensityImageStudent(const int width, const int height) : IntensityImage(width, height) {
 	pixelmap = new Intensity[width * height];
 	//int throwError = 0, e = 1 / throwError;
