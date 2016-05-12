@@ -21,14 +21,14 @@ int main(int argc, char * argv[]) {
 	//ImageFactory::setImplementation(ImageFactory::STUDENT);
 
 
-	ImageIO::debugFolder = "C:\\Users\\A\\Pictures";
+	ImageIO::debugFolder = "C:\\Users\\A\\Pictures\\Vision";
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
 
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\lena.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\Vision\\male-1.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -57,21 +57,21 @@ int main(int argc, char * argv[]) {
 	blur[2][1] = 1;
 	blur[2][2] = 1;
 
-	StudentKernel blur_k = StudentKernel(blur, 3, 3, 0.11111111111111);
+	StudentKernel blur_k = StudentKernel(blur, 3, 3, 127, 0.11111111111111);
 
 	double** hp = new double*[3];
 	for (int y = 0; y < 3; y++) {
 		hp[y] = new double[3];
 	}
-	hp[0][0] = -1;
-	hp[0][1] = -1;
-	hp[0][2] = -1;
-	hp[1][0] = -1;
-	hp[1][1] = 8;
-	hp[1][2] = -1;
-	hp[2][0] = -1;
-	hp[2][1] = -1;
-	hp[2][2] = -1;
+	hp[0][0] = 0;
+	hp[0][1] = 1;
+	hp[0][2] = 0;
+	hp[1][0] = 1;
+	hp[1][1] = 1;
+	hp[1][2] = 1;
+	hp[2][0] = 0;
+	hp[2][1] = 1;
+	hp[2][2] = 0;
 
 	//kernel[0][0] = 0.5;
 	//kernel[0][1] = 1;
@@ -84,8 +84,8 @@ int main(int argc, char * argv[]) {
 	//kernel[2][2] = 0.5;
 
 	
-	StudentKernel k = StudentKernel(hp, 3, 3);
-	IntensityImageStudent test2 = k.apply_on_image(blur_k.apply_on_image(test));
+	StudentKernel dilation = StudentKernel(hp, 3, 3, 0);
+	IntensityImageStudent test2 = dilation.dilate(blur_k.apply_on_image(blur_k.apply_on_image(test)));
 	ImageIO::saveIntensityImage(test2, ImageIO::getDebugFileName("test_kernel.png"));
 
 	DLLExecution * executor = new DLLExecution(input);
@@ -103,14 +103,6 @@ int main(int argc, char * argv[]) {
 	system("pause");
 	return 1;
 }
-
-
-
-
-
-
-
-
 
 
 bool executeSteps(DLLExecution * executor) {
