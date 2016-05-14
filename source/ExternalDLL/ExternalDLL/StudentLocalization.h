@@ -6,6 +6,11 @@
 
 #pragma once
 #include "Localization.h"
+#include "ImageIO.h"
+#include "StudentKernel.h"
+#include "ImageUtils.hpp"
+#include "StudentHistogram.hpp"
+
 class StudentLocalization :
 	public Localization {
 public:
