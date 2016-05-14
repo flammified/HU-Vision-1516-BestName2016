@@ -21,7 +21,7 @@ IntensityImageStudent::IntensityImageStudent(const IntensityImage &other) : Inte
 }
 
 IntensityImageStudent::IntensityImageStudent(const int width, const int height) : IntensityImage(width, height) {
-	pixelmap = new Intensity[width * height];
+	pixelmap = new Intensity[width * height]();
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: Initialize pixel storage
 }
