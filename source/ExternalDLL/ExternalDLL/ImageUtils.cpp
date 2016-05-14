@@ -17,3 +17,12 @@ IntensityImageStudent ImageUtils::subimage(const IntensityImage * image, const P
 	}
 	return result;
 }
+
+StudentHistogram ImageUtils::histogram_from_x_axis(const IntensityImage * image, int y)
+{
+	StudentHistogram histo(image->getWidth());
+	for (int x = 0; x < image->getWidth(); x++) {
+		histo.set_value(x, 255 - image->getPixel(x, y));
+	}
+	return histo;
+}
