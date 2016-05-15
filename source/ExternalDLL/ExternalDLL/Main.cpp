@@ -11,6 +11,8 @@
 #include "DLLExecution.h"
 #include "IntensityImageStudent.h"
 #include "StudentKernel.h"
+#include "StudentMedianFilter.h"
+#include "time.h"
 
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features);
 bool executeSteps(DLLExecution * executor);
@@ -21,14 +23,14 @@ int main(int argc, char * argv[]) {
 	//ImageFactory::setImplementation(ImageFactory::STUDENT);
 
 
-	ImageIO::debugFolder = "C:\\Users\\A\\Pictures";
+	ImageIO::debugFolder = "C:\\Users\\Sander\\Pictures";
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
 
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\lena.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\Sander\\Pictures\\test-median.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -37,7 +39,36 @@ int main(int argc, char * argv[]) {
 
 	ImageIO::saveRGBImage(*input, ImageIO::getDebugFileName("debug.png"));
 
-	IntensityImageStudent test{};
+   IntensityImageStudent test{};
+   test.convertFromRGB(*input);
+   StudentMedianFilter medianFilter{};
+   IntensityImage * medianFilterImg = medianFilter.apply_on_image(test);
+   ImageIO::saveIntensityImage(*medianFilterImg, ImageIO::getDebugFileName("median_filter.png"));
+   delete medianFilterImg;
+
+   char randomvar;
+   std::cout << "press a key to start test\n";
+   std::cin >> randomvar;
+   std::cout << "test started:\n";
+   double t1, t2, t3, efficient = 0, accurate = 0;
+   for (int i = 0; i < 100; i++){
+       t1 = (double)clock() / CLOCKS_PER_SEC;
+       test.convertFromRGB(*input);
+       t2 = (double)clock() / CLOCKS_PER_SEC;
+       test.convertFromRGB(*input, true);
+       t3 = (double)clock() / CLOCKS_PER_SEC;
+
+       accurate += (t2 - t1);
+       efficient += (t3 - t2);
+
+   }
+
+   std::cout << "accurate conversion took total time of: " << accurate << "\n";
+   std::cout << "efficient conversion took total time of: " << efficient << "\n";
+   std::cout << "accurate conversion is " << accurate / efficient << " times slower than efficient\n";
+
+
+
 	test.convertFromRGB(*input); //accurate
 	ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_accurate.png"));
 	test.convertFromRGB(*input, true); //efficient
