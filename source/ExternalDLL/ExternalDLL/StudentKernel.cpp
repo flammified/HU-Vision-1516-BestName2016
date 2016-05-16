@@ -35,7 +35,7 @@ IntensityImageStudent StudentKernel::dilate(IntensityImage * img) {
 	for (int y = 0; y < img->getHeight(); y++) {
 		for (int x = 0; x < img->getWidth(); x++) {
 			
-			if (img->getPixel(x, y) < 255) {
+			if (img->getPixel(x, y) == 0) {
 
 				for (int y_k = 0; y_k < this->h; y_k++) {
 					for (int x_k = 0; x_k < this->w; x_k++) {
