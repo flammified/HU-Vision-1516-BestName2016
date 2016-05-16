@@ -120,23 +120,40 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 	for (int y = 0; y < 3; y++) {
 		blur[y] = new double[3];
 	}
-	blur[0][0] = 1;
+	blur[0][0] = 0.75;
 	blur[0][1] = 1;
-	blur[0][2] = 1;
+	blur[0][2] = 0.75;
 	blur[1][0] = 1;
-	blur[1][1] = 1;
+	blur[1][1] = 2;
 	blur[1][2] = 1;
-	blur[2][0] = 1;
+	blur[2][0] = 0.75;
 	blur[2][1] = 1;
-	blur[2][2] = 1;
+	blur[2][2] = 0.75;
 
-	StudentKernel blur_k = StudentKernel(blur, 3, 3, 0, 0.11111111111111);
+   int gauss_blur_size = 5;
+   double blur_sum = 0;
+   double** gaussian_blur = new double*[gauss_blur_size];
+   for (int y = 0; y < gauss_blur_size; y++){
+       gaussian_blur[y] = new double[gauss_blur_size];
+       for (int x = 0; x < gauss_blur_size; x++){
+           double d_x = gauss_blur_size/2 - abs(x - gauss_blur_size/2) +0.5;
+           double d_y = gauss_blur_size/2 - abs(y - gauss_blur_size/2) +0.5;
+           gaussian_blur[y][x] = sqrt((d_y*d_y) + (d_x*d_x))/gauss_blur_size;
+           blur_sum += gaussian_blur[y][x];
+           std::cout << gaussian_blur[y][x] << (char)9;
+       }
+       std::cout << "\n\n";
+   }
+   double blur_weight = 1 / blur_sum;
+
+   StudentKernel blur_k = StudentKernel(gaussian_blur, gauss_blur_size, gauss_blur_size, 0, blur_weight);// 0.11111111111111);
 	StudentMedianFilter mf{};
 	StudentKernel edge_k = StudentKernel(edge, 3, 3, 0, 1);
-	IntensityImageStudent edges = edge_k.apply_on_image(&blur_k.apply_on_image(&blur_k.apply_on_image(&copy)));
+   IntensityImageStudent gblurimg{ blur_k.apply_on_image(&copy) };
+	IntensityImageStudent edges = edge_k.apply_on_image(&gblurimg);
 	ImageIO::saveIntensityImage(edges, ImageIO::getDebugFileName("edges.png"));
 
-	//IntensityImageStudent result_student = ImageUtils::zero_crossings(&edges);
+	IntensityImageStudent result_student = ImageUtils::zero_crossings(&edges);
 
 	ImageIO::saveIntensityImage(edges, ImageIO::getDebugFileName("test_kernel.png"));
 
@@ -150,6 +167,11 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 		delete[] blur[y];
 	}
 	delete[] blur;
+
+   for (int y = 0; y < gauss_blur_size; y++){
+       delete[] gaussian_blur[y];
+   }
+   delete[] gaussian_blur;
 
 	IntensityImage * result = ImageFactory::newIntensityImage(edges);
 	return result;

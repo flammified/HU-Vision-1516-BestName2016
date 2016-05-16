@@ -64,8 +64,12 @@ bool StudentLocalization::stepFindExactEyes(const IntensityImage &image, Feature
 	IntensityImageStudent eyes_copy = dilation.dilate(&eyes);
 	ImageIO::saveIntensityImage(eyes_copy, ImageIO::getDebugFileName("subimage_test.png"));
 
-	StudentHistogram histo = ImageUtils::histogram_from_x_axis(&eyes_copy, 25);
-	ImageIO::saveIntensityImage(*histo.get_debug_image(), ImageIO::getDebugFileName("histo.png"));
+   for (int i = 20; i < 30; i++){
+       StudentHistogram histo = ImageUtils::histogram_from_x_axis(&eyes_copy, i);
+       std::string s = "histo";
+       s.append(std::to_string(i));s.append(".png");
+       ImageIO::saveIntensityImage(*histo.get_debug_image(), ImageIO::getDebugFileName(s));
+   }
 
 	left.addPoint(headsidelp);
 	left.addPoint(headsidelp + Point2D<double>(head_width / 2, head_width/8));
