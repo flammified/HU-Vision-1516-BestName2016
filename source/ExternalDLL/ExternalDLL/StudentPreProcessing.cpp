@@ -130,15 +130,30 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 	blur[2][1] = 1;
 	blur[2][2] = 1;
 
+	double** dilate = new double*[3];
+	for (int y = 0; y < 3; y++) {
+		dilate[y] = new double[3];
+	}
+	dilate[0][0] = 0;
+	dilate[0][1] = 1;
+	dilate[0][2] = 0;
+	dilate[1][0] = 1;
+	dilate[1][1] = 1;
+	dilate[1][2] = 1;
+	dilate[2][0] = 0;
+	dilate[2][1] = 1;
+	dilate[2][2] = 0;
+
+	StudentKernel dilation_k = StudentKernel(dilate, 3, 3, 0, 1);
 	StudentKernel blur_k = StudentKernel(blur, 3, 3, 0, 0.11111111111111);
 	StudentMedianFilter mf{};
-	StudentKernel edge_k = StudentKernel(edge, 3, 3, 0, 1);
-	IntensityImageStudent edges = edge_k.apply_on_image(&blur_k.apply_on_image(&blur_k.apply_on_image(&copy)));
+	StudentKernel edge_k = StudentKernel(edge, 3, 3, 127, 1);
+	IntensityImageStudent edges = blur_k.apply_on_image(&edge_k.apply_on_image(&blur_k.apply_on_image(&blur_k.apply_on_image(&copy))));
 	ImageIO::saveIntensityImage(edges, ImageIO::getDebugFileName("edges.png"));
 
-	//IntensityImageStudent result_student = ImageUtils::zero_crossings(&edges);
+	IntensityImageStudent result_student = ImageUtils::zero_crossings(&edges);
 
-	ImageIO::saveIntensityImage(edges, ImageIO::getDebugFileName("test_kernel.png"));
+	ImageIO::saveIntensityImage(result_student, ImageIO::getDebugFileName("result.png"));
 
 
 	for (int y = 0; y < 9; y++) {
@@ -151,7 +166,7 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 	}
 	delete[] blur;
 
-	IntensityImage * result = ImageFactory::newIntensityImage(edges);
+	IntensityImage * result = ImageFactory::newIntensityImage(result_student);
 	return result;
 
 }
