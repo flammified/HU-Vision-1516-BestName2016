@@ -11,6 +11,7 @@
 #include "ImageFactory.h"
 #include "ImageUtils.hpp"
 #include "StudentMedianFilter.h"
+#include "IntensityImageStudent.h"
 
 class StudentPreProcessing : public PreProcessing {
 public:
