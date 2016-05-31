@@ -83,6 +83,7 @@
     <ClInclude Include="Feature.h" />
     <ClInclude Include="FeatureMap.h" />
     <ClInclude Include="GrayscaleAlgorithm.h" />
+    <ClInclude Include="ImageUtils.hpp" />
     <ClInclude Include="SonnetXVIII.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageFactory.h" />
@@ -101,7 +102,10 @@
     <ClInclude Include="RGBImagePrivate.h" />
     <ClInclude Include="RGBImageStudent.h" />
     <ClInclude Include="StudentExtraction.h" />
+    <ClInclude Include="StudentHistogram.hpp" />
+    <ClInclude Include="StudentKernel.h" />
     <ClInclude Include="StudentLocalization.h" />
+    <ClInclude Include="StudentMedianFilter.h" />
     <ClInclude Include="StudentPreProcessing.h" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +117,7 @@
     <ClCompile Include="Feature.cpp" />
     <ClCompile Include="FeatureMap.cpp" />
     <ClCompile Include="GrayscaleAlgorithm.cpp" />
+    <ClCompile Include="ImageUtils.cpp" />
     <ClCompile Include="SonnetXVIII.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImageFactory.cpp" />
@@ -128,7 +133,10 @@
     <ClCompile Include="RGBImagePrivate.cpp" />
     <ClCompile Include="RGBImageStudent.cpp" />
     <ClCompile Include="StudentExtraction.cpp" />
+    <ClCompile Include="StudentHistogram.cpp" />
+    <ClCompile Include="StudentKernel.cpp" />
     <ClCompile Include="StudentLocalization.cpp" />
+    <ClCompile Include="StudentMedianFilter.cpp" />
     <ClCompile Include="StudentPreProcessing.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

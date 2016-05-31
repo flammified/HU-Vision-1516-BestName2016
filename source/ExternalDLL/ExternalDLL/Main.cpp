@@ -23,14 +23,14 @@ int main(int argc, char * argv[]) {
 	//ImageFactory::setImplementation(ImageFactory::STUDENT);
 
 
-	ImageIO::debugFolder = "C:\\Users\\Sander\\Pictures";
+	ImageIO::debugFolder = "C:\\Users\\A\\Pictures\\Vision";
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
 
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\Sander\\Pictures\\test-median.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\Vision\\male-1.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -46,26 +46,26 @@ int main(int argc, char * argv[]) {
    ImageIO::saveIntensityImage(*medianFilterImg, ImageIO::getDebugFileName("median_filter.png"));
    delete medianFilterImg;
 
-   char randomvar;
-   std::cout << "press a key to start test\n";
-   std::cin >> randomvar;
-   std::cout << "test started:\n";
-   double t1, t2, t3, efficient = 0, accurate = 0;
-   for (int i = 0; i < 100; i++){
-       t1 = (double)clock() / CLOCKS_PER_SEC;
-       test.convertFromRGB(*input);
-       t2 = (double)clock() / CLOCKS_PER_SEC;
-       test.convertFromRGB(*input, true);
-       t3 = (double)clock() / CLOCKS_PER_SEC;
+   //char randomvar;
+   //std::cout << "press a key to start test\n";
+   //std::cin >> randomvar;
+   //std::cout << "test started:\n";
+   //double t1, t2, t3, efficient = 0, accurate = 0;
+   //for (int i = 0; i < 100; i++){
+   //    t1 = (double)clock() / CLOCKS_PER_SEC;
+   //    test.convertFromRGB(*input);
+   //    t2 = (double)clock() / CLOCKS_PER_SEC;
+   //    test.convertFromRGB(*input, true);
+   //    t3 = (double)clock() / CLOCKS_PER_SEC;
 
-       accurate += (t2 - t1);
-       efficient += (t3 - t2);
+   //    accurate += (t2 - t1);
+   //    efficient += (t3 - t2);
 
-   }
+   //}
 
-   std::cout << "accurate conversion took total time of: " << accurate << "\n";
-   std::cout << "efficient conversion took total time of: " << efficient << "\n";
-   std::cout << "accurate conversion is " << accurate / efficient << " times slower than efficient\n";
+   //std::cout << "accurate conversion took total time of: " << accurate << "\n";
+   //std::cout << "efficient conversion took total time of: " << efficient << "\n";
+   //std::cout << "accurate conversion is " << accurate / efficient << " times slower than efficient\n";
 
 
 
@@ -74,51 +74,7 @@ int main(int argc, char * argv[]) {
 	test.convertFromRGB(*input, true); //efficient
 	ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_efficient.png"));
 
-	double** blur = new double*[3];
-	for (int y = 0; y < 3; y++) {
-		blur[y] = new double[3];
-	}
-	blur[0][0] = 1;
-	blur[0][1] = 1;
-	blur[0][2] = 1;
-	blur[1][0] = 1;
-	blur[1][1] = 1;
-	blur[1][2] = 1;
-	blur[2][0] = 1;
-	blur[2][1] = 1;
-	blur[2][2] = 1;
-
-	StudentKernel blur_k = StudentKernel(blur, 3, 3, 127, 0.11111111111111);
-
-	double** hp = new double*[3];
-	for (int y = 0; y < 3; y++) {
-		hp[y] = new double[3];
-	}
-	hp[0][0] = 0;
-	hp[0][1] = 1;
-	hp[0][2] = 0;
-	hp[1][0] = 1;
-	hp[1][1] = 1;
-	hp[1][2] = 1;
-	hp[2][0] = 0;
-	hp[2][1] = 1;
-	hp[2][2] = 0;
-
-	//kernel[0][0] = 0.5;
-	//kernel[0][1] = 1;
-	//kernel[0][2] = 0.5;
-	//kernel[1][0] = 1;
-	//kernel[1][1] = -6;
-	//kernel[1][2] = 1;
-	//kernel[2][0] = 0.5;
-	//kernel[2][1] = -1;
-	//kernel[2][2] = 0.5;
-
 	
-	StudentKernel dilation = StudentKernel(hp, 3, 3, 0);
-	IntensityImageStudent test2 = dilation.dilate(blur_k.apply_on_image(blur_k.apply_on_image(test)));
-	ImageIO::saveIntensityImage(test2, ImageIO::getDebugFileName("test_kernel.png"));
-
 	DLLExecution * executor = new DLLExecution(input);
 
 
@@ -150,7 +106,7 @@ bool executeSteps(DLLExecution * executor) {
 	}
 	ImageIO::saveIntensityImage(*executor->resultPreProcessingStep2, ImageIO::getDebugFileName("Pre-processing-2.png"));
 
-	if (!executor->executePreProcessingStep3(false)) {
+	if (!executor->executePreProcessingStep3(true)) {
 		std::cout << "Pre-processing step 3 failed!" << std::endl;
 		return false;
 	}
