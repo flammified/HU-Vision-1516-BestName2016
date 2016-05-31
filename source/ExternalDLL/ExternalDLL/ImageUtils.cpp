@@ -102,6 +102,21 @@ IntensityImageStudent ImageUtils::inverse(const IntensityImage * image)
 	return result;
 }
 
+IntensityImageStudent ImageUtils::threshold(const IntensityImage * image, Intensity T)
+{
+	IntensityImageStudent result(*image);
+	
+	for (int x = 0; x < image->getWidth(); x++) {
+		for (int y = 0; y < image->getHeight(); y++) {
+			result.setPixel(x, y, image->getPixel(x, y) > T ? 255 : 0);
+		}
+	}
+
+	return result;
+}
+
+
+
 
 StudentHistogram ImageUtils::histogram_from_x_axis(const IntensityImage * image, int y)
 {
@@ -111,3 +126,8 @@ StudentHistogram ImageUtils::histogram_from_x_axis(const IntensityImage * image,
 	}
 	return histo;
 }
+
+
+
+
+
