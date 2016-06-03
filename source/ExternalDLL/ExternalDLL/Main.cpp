@@ -21,14 +21,14 @@ int main(int argc, char * argv[]) {
 	//ImageFactory::setImplementation(ImageFactory::STUDENT);
 
 
-	ImageIO::debugFolder = "C:\\Users\\A\\Pictures\\Vision";
+	ImageIO::debugFolder = "C:\\Users\\Sander\\Pictures\\Vision";
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
 
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\Vision\\male-1.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\Sander\\Pictures\\Vision\\male-2.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -85,7 +85,7 @@ int main(int argc, char * argv[]) {
 
 	
 	StudentKernel dilation = StudentKernel(hp, 3, 3, 0);
-	IntensityImageStudent test2 = dilation.dilate(blur_k.apply_on_image(blur_k.apply_on_image(test)));
+	IntensityImageStudent test2 = dilation.dilate(&blur_k.apply_on_image(&blur_k.apply_on_image(&test)));
 	ImageIO::saveIntensityImage(test2, ImageIO::getDebugFileName("test_kernel.png"));
 
 	DLLExecution * executor = new DLLExecution(input);
@@ -159,11 +159,10 @@ bool executeSteps(DLLExecution * executor) {
 		return false;
 	}
 
-	if (!executor->executeLocalizationStep5(false)) {
+	if (!executor->executeLocalizationStep5(true)) {
 		std::cout << "Localization step 5 failed!" << std::endl;
 		return false;
 	}
-
 
 
 	//Execute the extraction steps
@@ -211,8 +210,8 @@ void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features) {
 	//Nose
 	Point2D<double> noseLeft = features.getFeature(Feature::FEATURE_NOSE_END_LEFT)[0];
 	Point2D<double> noseRight = features.getFeature(Feature::FEATURE_NOSE_END_RIGHT)[0];
-	Point2D<double> nostrilLeft = features.getFeature(Feature::FEATURE_NOSTRIL_LEFT)[0];
-	Point2D<double> nostrilRight = features.getFeature(Feature::FEATURE_NOSTRIL_RIGHT)[0];
+   Point2D<double> nostrilLeft = features.getFeature(Feature::FEATURE_NOSTRIL_LEFT)[0];
+   Point2D<double> nostrilRight = features.getFeature(Feature::FEATURE_NOSTRIL_RIGHT)[0];
 	Point2D<double> noseBottom = features.getFeature(Feature::FEATURE_NOSE_BOTTOM)[0];
 
 
