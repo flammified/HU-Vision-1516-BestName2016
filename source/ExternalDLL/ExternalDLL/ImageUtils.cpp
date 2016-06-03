@@ -19,7 +19,7 @@ IntensityImageStudent ImageUtils::subimage(const IntensityImage * image, const P
 	return result;
 }
 
-IntensityImageStudent ImageUtils::zero_crossings(const IntensityImage * image)
+IntensityImageStudent ImageUtils::edge_scale(const IntensityImage * image)
 {
 	IntensityImageStudent result(*image);
 
@@ -35,7 +35,7 @@ IntensityImageStudent ImageUtils::zero_crossings(const IntensityImage * image)
 			
 			int current_pixel = image->getPixel(x, y);
 
-			if (current_pixel < 127) {
+			if (current_pixel < 126) {
 				current_pixel -= 127;
 				current_pixel = abs(current_pixel);
 
@@ -125,6 +125,20 @@ StudentHistogram ImageUtils::histogram_from_x_axis(const IntensityImage * image,
 		histo.set_value(x, 255 - image->getPixel(x, y));
 	}
 	return histo;
+}
+
+
+Intensity ImageUtils::interpolate_first_order(const IntensityImage * image, double x, double y) {
+
+	double dx = x - floor(x);
+	double dy = y - floor(y);
+
+	Intensity p = image->getPixel(floor(x), floor(y)) + (image->getPixel(ceil(x), floor(y)) - image->getPixel(floor(x), floor(y))) * dx;
+	Intensity q = image->getPixel(floor(x), ceil(y)) + (image->getPixel(ceil(x), ceil(y)) - image->getPixel(floor(x), ceil(y))) * dx;
+
+	//std::cout << "x: " << x << " y: " << y << "\n";
+
+	return p + (q - p) * dy;
 }
 
 

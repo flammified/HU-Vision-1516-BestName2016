@@ -1,4 +1,7 @@
 #include "StudentPreProcessing.h"
+#include <iomanip>
+
+
 
 
 IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &image) const {
@@ -6,7 +9,45 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 }
  
 IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &image) const {
-	return nullptr;
+
+	if ((200 * 200) > (image.getWidth() * image.getHeight())) {
+		IntensityImage * result = ImageFactory::newIntensityImage(image);
+		return result;
+	}
+
+	IntensityImage * result = ImageFactory::newIntensityImage(200, 200);
+
+	if (true) {	//Using backward mapping
+		for (int y = 0; y < result->getHeight(); y++) {
+			for (int x = 0; x < result->getWidth(); x++) {
+
+				if (true) {//First order
+					double scaled_x = (double)(x * image.getWidth()) / (double)result->getWidth();
+					double scaled_y = (double)(y * image.getHeight()) / (double)result->getHeight();
+					//std::cout << result->getWidth() << "  " << scaled_y << "\n";
+					result->setPixel(x, y, ImageUtils::interpolate_first_order(&image, scaled_x, scaled_y));
+				}
+				else { //zero order (nearest neighbour)
+					double scaled_x = (double)(x * image.getWidth()) /  (double)result->getWidth();
+					double scaled_y = (double)(y * image.getHeight()) / (double)result->getHeight();
+					result->setPixel(x, y, image.getPixel(floor(scaled_x), floor(scaled_y)));
+				}
+			}
+		}
+	}
+	else { //Forward mapping
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
+
+				int scaled_x = floor((x * result->getWidth()) / image.getWidth());
+				int scaled_y = floor((y * result->getHeight()) / image.getHeight());
+				result->setPixel(scaled_x, scaled_y, image.getPixel(x, y));
+				
+			}
+		}
+	}
+
+	return result;
 }
 
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
@@ -130,30 +171,15 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 	blur[2][1] = 1;
 	blur[2][2] = 1;
 
-	double** dilate = new double*[3];
-	for (int y = 0; y < 3; y++) {
-		dilate[y] = new double[3];
-	}
-	dilate[0][0] = 0;
-	dilate[0][1] = 1;
-	dilate[0][2] = 0;
-	dilate[1][0] = 1;
-	dilate[1][1] = 1;
-	dilate[1][2] = 1;
-	dilate[2][0] = 0;
-	dilate[2][1] = 1;
-	dilate[2][2] = 0;
-
-	StudentKernel dilation_k = StudentKernel(dilate, 3, 3, 0, 1);
 	StudentKernel blur_k = StudentKernel(blur, 3, 3, 0, 0.11111111111111);
 	StudentMedianFilter mf{};
 	StudentKernel edge_k = StudentKernel(edge, 3, 3, 127, 1);
 	IntensityImageStudent edges = blur_k.apply_on_image(&edge_k.apply_on_image(&blur_k.apply_on_image(&blur_k.apply_on_image(&copy))));
-	ImageIO::saveIntensityImage(edges, ImageIO::getDebugFileName("edges.png"));
+	//ImageIO::saveIntensityImage(edges, ImageIO::getDebugFileName("edges.png"));
 
-	IntensityImageStudent result_student = ImageUtils::zero_crossings(&edges);
+	IntensityImageStudent result_student = ImageUtils::edge_scale(&edges);
 
-	ImageIO::saveIntensityImage(result_student, ImageIO::getDebugFileName("result.png"));
+	/*ImageIO::saveIntensityImage(result_student, ImageIO::getDebugFileName("result.png"));*/
 
 
 	for (int y = 0; y < 9; y++) {
