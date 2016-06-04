@@ -10,12 +10,11 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
  
 IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &image) const {
 
-	if ((200 * 200) > (image.getWidth() * image.getHeight())) {
-		IntensityImage * result = ImageFactory::newIntensityImage(image);
-		return result;
-	}
-
-	IntensityImage * result = ImageFactory::newIntensityImage(200, 200);
+	//if ((200 * 200) > (image.getWidth() * image.getHeight())) {
+	//	IntensityImage * result = ImageFactory::newIntensityImage(image);
+	//	return result;
+	//}
+	IntensityImage * result = ImageFactory::newIntensityImage(200, image.getHeight() * ((double)200 / (double)image.getWidth()));
 
 	if (true) {	//Using backward mapping
 		for (int y = 0; y < result->getHeight(); y++) {
@@ -179,7 +178,7 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 
 	IntensityImageStudent result_student = ImageUtils::edge_scale(&edges);
 
-	/*ImageIO::saveIntensityImage(result_student, ImageIO::getDebugFileName("result.png"));*/
+	ImageIO::saveIntensityImage(result_student, ImageIO::getDebugFileName("result.png"));
 
 
 	for (int y = 0; y < 9; y++) {
