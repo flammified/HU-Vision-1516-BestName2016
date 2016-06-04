@@ -13,6 +13,7 @@
 #include "StudentKernel.h"
 #include "StudentMedianFilter.h"
 #include "time.h"
+#include <iomanip>      // std::setprecision
 
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features);
 bool executeSteps(DLLExecution * executor);
@@ -26,11 +27,8 @@ int main(int argc, char * argv[]) {
 	ImageIO::debugFolder = "C:\\Users\\A\\Pictures\\Vision";
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
-
-
-
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\Vision\\male-1.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\A\\Pictures\\Vision\\TestSet\\male-1.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -40,32 +38,46 @@ int main(int argc, char * argv[]) {
 	ImageIO::saveRGBImage(*input, ImageIO::getDebugFileName("debug.png"));
 
    IntensityImageStudent test{};
-   test.convertFromRGB(*input);
+   test.convertFromRGB(*input); //accurate
+   //test.convertFromRGB(*input);
    StudentMedianFilter medianFilter{};
-   IntensityImage * medianFilterImg = medianFilter.apply_on_image(test);
-   ImageIO::saveIntensityImage(*medianFilterImg, ImageIO::getDebugFileName("median_filter.png"));
-   delete medianFilterImg;
+   //IntensityImage * medianFilterImg = medianFilter.apply_on_image(test);
+   //ImageIO::saveIntensityImage(*medianFilterImg, ImageIO::getDebugFileName("median_filter.png"));
+   //delete medianFilterImg;
 
-   //char randomvar;
-   //std::cout << "press a key to start test\n";
-   //std::cin >> randomvar;
-   //std::cout << "test started:\n";
-   //double t1, t2, t3, efficient = 0, accurate = 0;
-   //for (int i = 0; i < 100; i++){
-   //    t1 = (double)clock() / CLOCKS_PER_SEC;
-   //    test.convertFromRGB(*input);
-   //    t2 = (double)clock() / CLOCKS_PER_SEC;
-   //    test.convertFromRGB(*input, true);
-   //    t3 = (double)clock() / CLOCKS_PER_SEC;
+   char randomvar;
+   StudentPreProcessing studentPreProcessing;
+   DefaultPreProcessing defaultPreProcessing;
+ //  std::cout << "press a key to start test\n";
+ //  std::cin >> randomvar;
+ //  std::cout << "test started:\n";
+ //  double t1, t2, t3, theirs = 0, ours = 0, max_ours = 0, max_theirs = 0;
+ //  for (int i = 0; i < 50; i++){
+ //      t1 = (double)clock() / CLOCKS_PER_SEC;
+	//   studentPreProcessing.stepScaleImage(test);
+ //      t2 = (double)clock() / CLOCKS_PER_SEC;
+	//  /* defaultPreProcessing.stepScaleImage(test);
+ //      t3 = (double)clock() / CLOCKS_PER_SEC;*/
 
-   //    accurate += (t2 - t1);
-   //    efficient += (t3 - t2);
+	//   ours += (t2 - t1);
+	//   if (max_ours < (t2 - t1)) {
+	//	   max_ours = (t2 - t1);
+	//   }
+	// /*  theirs += (t3 - t2);
+	//   if (max_theirs < (t3 - t2)) {
+	//	   max_theirs = (t3 - t2);
+	//   }*/
+ //  }
 
-   //}
+	////std::cout << "their scaling took total time of: " << theirs << "\n";
+	//std::cout << "our scaling took total time of: " << ours << "\n";
 
-   //std::cout << "accurate conversion took total time of: " << accurate << "\n";
-   //std::cout << "efficient conversion took total time of: " << efficient << "\n";
-   //std::cout << "accurate conversion is " << accurate / efficient << " times slower than efficient\n";
+	////std::cout << "their scaling had a maximal time of:  " << max_theirs << "\n";
+	//std::cout << "our scaling had a maximal time of: " << max_ours << "\n";
+
+	////std::cout << "their scaling took: " << theirs / 100 << " per run \n";
+	//std::cout << "our scaling took: " << ours / 50 << " per run \n";
+	////std::cout << "our detection is " << ours / theirs << " times slower than theirs\n";
 
 
 
@@ -74,9 +86,7 @@ int main(int argc, char * argv[]) {
 	test.convertFromRGB(*input, true); //efficient
 	ImageIO::saveIntensityImage(test, ImageIO::getDebugFileName("grayscale_test_efficient.png"));
 
-	
 	DLLExecution * executor = new DLLExecution(input);
-
 
 	if (executeSteps(executor)) {
 		std::cout << "Face recognition successful!" << std::endl;
@@ -100,13 +110,14 @@ bool executeSteps(DLLExecution * executor) {
 		return false;
 	}
 
-	if (!executor->executePreProcessingStep2(false)) {
+	if (!executor->executePreProcessingStep2(true)) {
 		std::cout << "Pre-processing step 2 failed!" << std::endl;
 		return false;
 	}
+
 	ImageIO::saveIntensityImage(*executor->resultPreProcessingStep2, ImageIO::getDebugFileName("Pre-processing-2.png"));
 
-	if (!executor->executePreProcessingStep3(true)) {
+	if (!executor->executePreProcessingStep3(false)) {
 		std::cout << "Pre-processing step 3 failed!" << std::endl;
 		return false;
 	}
