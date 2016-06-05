@@ -35,7 +35,7 @@ void IntensityImageStudent::set(const int width, const int height) {
 }
 
 void IntensityImageStudent::set(const IntensityImageStudent &other) {
-
+    delete[] pixelmap;
 	IntensityImage::set(other.getWidth(), other.getHeight());
 	for (int i = 0; i < this->getHeight()*this->getWidth(); i++){
 		pixelmap[i] = other.getPixel(i);
