@@ -1,5 +1,5 @@
 #include "StudentLocalization.h"
-
+//#define DEBUG
 bool StudentLocalization::stepFindHead(const IntensityImage &image, FeatureMap &features) const {
 	return false;
 }
